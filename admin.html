@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Academy - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00ff41;
+            --secondary: #008f11;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #f0f0f0;
+            --gray: #333;
+            --admin-bg: #0f0f0f;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 250px;
+            background-color: var(--dark);
+            border-right: 1px solid var(--secondary);
+            padding: 2rem 1rem;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .admin-logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .admin-logo h1 {
+            font-size: 1.3rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .admin-nav ul {
+            list-style: none;
+        }
+
+        .admin-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.8rem 1rem;
+            color: var(--light);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background-color: rgba(0, 255, 65, 0.1);
+            color: var(--primary);
+        }
+
+        .admin-main {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--admin-bg);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray);
+        }
+
+        .admin-header h2 {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            color: var(--light);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        .btn-danger {
+            background: #ff4757;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--darker);
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            color: var(--light);
+            font-size: 1rem;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .tool-list {
+            margin-top: 2rem;
+        }
+
+        .tool-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--darker);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--primary);
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .notification {
+            padding: 1rem;
+            background-color: rgba(0, 255, 65, 0.1);
+            border-left: 3px solid var(--primary);
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--darker);
+        }
+
+        .login-box {
+            background-color: var(--dark);
+            border-radius: 8px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--secondary);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="adminLogin" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h2 style="text-align: center; color: var(--primary); margin-bottom: 1rem;">Admin Login</h2>
+                <p style="text-align: center; color: #aaa; margin-bottom: 2rem;">Enter your credentials to access the admin panel</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+            <div class="notification" style="margin-top: 1rem;">
+                <p><strong>Default Credentials:</strong><br>Username: admin<br>Password: admin123</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="admin-container hidden">
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-terminal"></i>
+                <h1>CyberSec Admin</h1>
+            </div>
+            
+            <nav class="admin-nav">
+                <ul>
+                    <li><a href="#" class="active" data-tab="content">Website Content</a></li>
+                    <li><a href="#" data-tab="tools">Manage Tools</a></li>
+                    <li><a href="#" data-tab="courses">Manage Courses</a></li>
+                    <li><a href="#" id="logoutBtn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="admin-main">
+            <div class="admin-header">
+                <h2 id="adminPageTitle">Website Content Management</h2>
+                <div class="admin-actions">
+                    <button class="btn btn-secondary" onclick="viewWebsite()">View Website</button>
+                    <button class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+                </div>
+            </div>
+            
+            <div id="content" class="tab-content active">
+                <div class="notification">
+                    <p><strong>Note:</strong> Changes will be saved to data.json file. Make sure to download the updated file and upload it to your GitHub repository.</p>
+                </div>
+                
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">Hero Section</h3>
+                <form id="heroForm">
+                    <div class="form-group">
+                        <label for="heroTitle">Hero Title</label>
+                        <input type="text" id="heroTitle" class="form-control" placeholder="Enter hero title">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroDescription">Hero Description</label>
+                        <textarea id="heroDescription" class="form-control" placeholder="Enter hero description"></textarea>
+                    </div>
+                </form>
+                
+                <h3 style="margin: 2rem 0 1rem; color: var(--primary);">Courses Section</h3>
+                <form id="coursesForm">
+                    <div class="form-group">
+                        <label for="coursesTitle">Courses Title</label>
+                        <input type="text" id="coursesTitle" class="form-control" placeholder="Enter courses title">
+                    </div>
+                    <div class="form-group">
+                        <label for="coursesDescription">Courses Description</label>
+                        <textarea id="coursesDescription" class="form-control" placeholder="Enter courses description"></textarea>
+                    </div>
+                </form>
+                
+                <h3 style="margin: 2rem 0 1rem; color: var(--primary);">About Section</h3>
+                <form id="aboutForm">
+                    <div class="form-group">
+                        <label for="aboutTitle">About Title</label>
+                        <input type="text" id="aboutTitle" class="form-control" placeholder="Enter about title">
+                    </div>
+                    <div class="form-group">
+                        <label for="aboutDescription">About Description</label>
+                        <textarea id="aboutDescription" class="form-control" placeholder="Enter about description"></textarea>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="tools" class="tab-content">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">Add New Tool</h3>
+                <form id="addToolForm">
+                    <div class="form-group">
+                        <label for="toolName">Tool Name</label>
+                        <input type="text" id="toolName" class="form-control" placeholder="Enter tool name">
+                    </div>
+                    <div class="form-group">
+                        <label for="toolDescription">Tool Description</label>
+                        <textarea id="toolDescription" class="form-control" placeholder="Enter tool description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="toolIcon">Tool Icon (FontAwesome class)</label>
+                        <input type="text" id="toolIcon" class="form-control" placeholder="fas fa-tools">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Tool</button>
+                </form>
+                
+                <div class="tool-list" id="toolsList">
+                    <!-- Tools will be loaded here -->
+                </div>
+            </div>
+            
+            <div id="courses" class="tab-content">
+                <h3 style="margin-bottom: 1rem; color: var(--primary);">Add New Course</h3>
+                <form id="addCourseForm">
+                    <div class="form-group">
+                        <label for="courseTitle">Course Title</label>
+                        <input type="text" id="courseTitle" class="form-control" placeholder="Enter course title">
+                    </div>
+                    <div class="form-group">
+                        <label for="courseDescription">Course Description</label>
+                        <textarea id="courseDescription" class="form-control" placeholder="Enter course description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseIcon">Course Icon (FontAwesome class)</label>
+                        <input type="text" id="courseIcon" class="form-control" placeholder="fas fa-network-wired">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Course</button>
+                </form>
+                
+                <div class="tool-list" id="coursesList">
+                    <!-- Courses will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin credentials
+        const ADMIN_USERNAME = 'admin';
+        const ADMIN_PASSWORD = 'admin123';
+
+        // DOM elements
+        const adminLogin = document.getElementById('adminLogin');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check if user is already logged in
+        if(localStorage.getItem('adminLoggedIn') === 'true') {
+            showAdminPanel();
+        }
+
+        // Login form handler
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if(username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                localStorage.setItem('adminLoggedIn', 'true');
+                showAdminPanel();
+            } else {
+                alert('Invalid credentials!');
+            }
+        });
+
+        // Logout handler
+        logoutBtn.addEventListener('click', function() {
+            localStorage.setItem('adminLoggedIn', 'false');
+            adminLogin.classList.remove('hidden');
+            adminPanel.classList.add('hidden');
+        });
+
+        // Tab navigation
+        document.querySelectorAll('.admin-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                if(this.id === 'logoutBtn') return;
+                
+                // Update active tab
+                document.querySelectorAll('.admin-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update page title
+                document.getElementById('adminPageTitle').textContent = this.textContent;
+            });
+        });
+
+        function showAdminPanel() {
+            adminLogin.classList.add('hidden');
+            adminPanel.classList.remove('hidden');
+            loadAdminData();
+        }
+
+        async function loadAdminData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // Load website content
+                document.getElementById('heroTitle').value = data.websiteContent.heroTitle.replace(/<span>|<\/span>/g, '');
+                document.getElementById('heroDescription').value = data.websiteContent.heroDescription;
+                document.getElementById('coursesTitle').value = data.websiteContent.coursesTitle;
+                document.getElementById('coursesDescription').value = data.websiteContent.coursesDescription;
+                document.getElementById('aboutTitle').value = data.websiteContent.aboutTitle;
+                document.getElementById('aboutDescription').value = data.websiteContent.aboutDescription;
+                
+                // Load tools
+                loadToolsList(data.tools);
+                
+                // Load courses
+                loadCoursesList(data.courses);
+                
+            } catch (error) {
+                console.error('Error loading admin data:', error);
+                alert('Error loading data. Make sure data.json exists.');
+            }
+        }
+
+        function loadToolsList(tools) {
+            const toolsList = document.getElementById('toolsList');
+            toolsList.innerHTML = '';
+            
+            tools.forEach(tool => {
+                const toolItem = document.createElement('div');
+                toolItem.className = 'tool-item';
+                toolItem.innerHTML = `
+                    <div>
+                        <h4>${tool.name}</h4>
+                        <p>${tool.description}</p>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="editTool(${tool.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTool(${tool.id})">Delete</button>
+                    </div>
+                `;
+                toolsList.appendChild(toolItem);
+            });
+        }
+
+        function loadCoursesList(courses) {
+            const coursesList = document.getElementById('coursesList');
+            coursesList.innerHTML = '';
+            
+            courses.forEach(course => {
+                const courseItem = document.createElement('div');
+                courseItem.className = 'tool-item';
+                courseItem.innerHTML = `
+                    <div>
+                        <h4>${course.title}</h4>
+                        <p>${course.description}</p>
+                    </div>
+                    <div class="tool-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="editCourse(${course.id})">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteCourse(${course.id})">Delete</button>
+                    </div>
+                `;
+                coursesList.appendChild(courseItem);
+            });
+        }
+
+        // Add tool form handler
+        document.getElementById('addToolForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const toolName = document.getElementById('toolName').value;
+            const toolDescription = document.getElementById('toolDescription').value;
+            const toolIcon = document.getElementById('toolIcon').value;
+            
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                const newTool = {
+                    id: data.tools.length + 1,
+                    name: toolName,
+                    description: toolDescription,
+                    icon: toolIcon,
+                    downloadLink: "#"
+                };
+                
+                data.tools.push(newTool);
+                data.stats.totalTools = data.tools.length;
+                
+                // Update JSON file (in real scenario, this would be a server request)
+                await updateJSONFile(data);
+                
+                this.reset();
+                loadToolsList(data.tools);
+                alert('Tool added successfully!');
+                
+            } catch (error) {
+                console.error('Error adding tool:', error);
+                alert('Error adding tool.');
+            }
+        });
+
+        // Add course form handler
+        document.getElementById('addCourseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const courseTitle = document.getElementById('courseTitle').value;
+            const courseDescription = document.getElementById('courseDescription').value;
+            const courseIcon = document.getElementById('courseIcon').value;
+            
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                const newCourse = {
+                    id: data.courses.length + 1,
+                    title: courseTitle,
+                    description: courseDescription,
+                    icon: courseIcon
+                };
+                
+                data.courses.push(newCourse);
+                data.stats.totalCourses = data.courses.length;
+                
+                // Update JSON file
+                await updateJSONFile(data);
+                
+                this.reset();
+                loadCoursesList(data.courses);
+                alert('Course added successfully!');
+                
+            } catch (error) {
+                console.error('Error adding course:', error);
+                alert('Error adding course.');
+            }
+        });
+
+        async function saveChanges() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // Update website content
+                data.websiteContent.heroTitle = document.getElementById('heroTitle').value;
+                data.websiteContent.heroDescription = document.getElementById('heroDescription').value;
+                data.websiteContent.coursesTitle = document.getElementById('coursesTitle').value;
+                data.websiteContent.coursesDescription = document.getElementById('coursesDescription').value;
+                data.websiteContent.aboutTitle = document.getElementById('aboutTitle').value;
+                data.websiteContent.aboutDescription = document.getElementById('aboutDescription').value;
+                
+                // Update JSON file
+                await updateJSONFile(data);
+                alert('All changes saved successfully!');
+                
+            } catch (error) {
+                console.error('Error saving changes:', error);
+                alert('Error saving changes.');
+            }
+        }
+
+        // This function simulates updating the JSON file
+        // In a real GitHub Pages scenario, you would need to use GitHub API
+        async function updateJSONFile(data) {
+            // Create a downloadable JSON file
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            // Create download link
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'data.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Note: In production, you would upload this file to your GitHub repository
+            console.log('JSON file updated. Please upload the downloaded file to your GitHub repository.');
+        }
+
+        function viewWebsite() {
+            window.open('index.html', '_blank');
+        }
+
+        // Placeholder functions for edit/delete operations
+        function editTool(id) {
+            alert(`Edit tool with ID: ${id} - This would open an edit form in a complete implementation.`);
+        }
+
+        function deleteTool(id) {
+            if(confirm('Are you sure you want to delete this tool?')) {
+                alert(`Tool ${id} deleted - This would update the JSON file in a complete implementation.`);
+            }
+        }
+
+        function editCourse(id) {
+            alert(`Edit course with ID: ${id} - This would open an edit form in a complete implementation.`);
+        }
+
+        function deleteCourse(id) {
+            if(confirm('Are you sure you want to delete this course?')) {
+                alert(`Course ${id} deleted - This would update the JSON file in a complete implementation.`);
+            }
+        }
+    </script>
+</body>
+</html>
