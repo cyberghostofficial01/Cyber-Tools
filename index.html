@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Academy - Learn Ethical Hacking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #00ff41;
+            --secondary: #008f11;
+            --dark: #0a0a0a;
+            --darker: #050505;
+            --light: #f0f0f0;
+            --gray: #333;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        header {
+            background-color: rgba(10, 10, 10, 0.9);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--secondary);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            color: var(--light);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            margin-top: 80px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-text h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-text h2 span {
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-text {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .terminal {
+            background-color: var(--dark);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.2);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background-color: #222;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close { background-color: #ff5f56; }
+        .minimize { background-color: #ffbd2e; }
+        .maximize { background-color: #27c93f; }
+
+        .terminal-title {
+            margin-left: 1rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            min-height: 300px;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .prompt { color: var(--primary); margin-right: 0.5rem; }
+        .command { color: var(--light); }
+        .output { color: #aaa; margin-left: 1.5rem; }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background-color: var(--primary);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .section {
+            padding: 6rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: #aaa;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid #222;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0, 255, 65, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #aaa;
+            margin-bottom: 1.5rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tool-card {
+            background-color: rgba(20, 20, 20, 0.8);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #222;
+        }
+
+        .tool-card:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card p {
+            color: #aaa;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta {
+            background: linear-gradient(to right, var(--dark), var(--darker));
+            text-align: center;
+            padding: 6rem 2rem;
+            border-top: 1px solid #222;
+            border-bottom: 1px solid #222;
+        }
+
+        .free-access {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            text-align: center;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .admin-access {
+            background: linear-gradient(90deg, #ff6b6b, #ffa726);
+            color: var(--dark);
+            text-align: center;
+            padding: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .admin-access a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
+        footer {
+            background-color: var(--darker);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #222;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            color: var(--dark);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 992px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-text h2 {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h2 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+            
+            .section {
+                padding: 4rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+
+    <div class="free-access">
+        <i class="fas fa-unlock-alt"></i> COMPLETELY FREE ACCESS - NO LOGIN REQUIRED
+    </div>
+
+    <div class="admin-access">
+        <i class="fas fa-cog"></i> Admin Access: 
+        <a href="admin.html" target="_blank">Go to Admin Panel</a>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-terminal"></i>
+            <h1>CyberSec Academy</h1>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#tools">Tools</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        
+        <div class="auth-buttons">
+            <button class="btn btn-primary" onclick="startLearning()">Start Learning Now</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2 id="heroTitle">Loading...</h2>
+                <p id="heroDescription">Loading...</p>
+                
+                <div class="hero-btns">
+                    <button class="btn btn-primary" onclick="startLearning()">Start Learning Now</button>
+                    <button class="btn btn-primary" onclick="exploreTools()">Explore Tools</button>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="toolsCount">0</div>
+                        <div class="stat-text">Free Tools</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="coursesCount">0</div>
+                        <div class="stat-text">Courses</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="studentsCount">0</div>
+                        <div class="stat-text">Students</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-button close"></div>
+                        <div class="terminal-button minimize"></div>
+                        <div class="terminal-button maximize"></div>
+                        <div class="terminal-title">root@cybersec:~</div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-line">
+                            <span class="prompt">$</span>
+                            <span class="command">fetch_data --api data.json</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="output">Loading website content...</span>
+                        </div>
+                        <div class="terminal-line">
+                            <span class="prompt">$</span>
+                            <span class="command"></span>
+                            <span class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="courses">
+        <div class="section-title">
+            <h2 id="coursesTitle">Loading...</h2>
+            <p id="coursesDescription">Loading...</p>
+        </div>
+        
+        <div class="features-grid" id="coursesGrid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <h3>Loading Courses...</h3>
+                <p>Please wait while we load the course content.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="tools">
+        <div class="section-title">
+            <h2>Free Hacking Tools</h2>
+            <p>Access our curated collection of powerful cybersecurity tools</p>
+        </div>
+        
+        <div class="tools-grid" id="toolsGrid">
+            <div class="tool-card">
+                <div class="tool-icon">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <h3>Loading Tools...</h3>
+                <p>Please wait while we load the tools.</p>
+                <button class="btn btn-primary" disabled>Loading...</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <h2>Start Learning Ethical Hacking Today - Completely Free!</h2>
+        <p>Join thousands of students learning cybersecurity skills with our free courses and tools.</p>
+        <button class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem;" onclick="startLearning()">Get Started For Free</button>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>CyberSec Academy</h3>
+                <p id="aboutDescription">Loading...</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Courses</h3>
+                <ul id="footerCourses">
+                    <li><a href="#">Loading...</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#tools">Free Tools</a></li>
+                    <li><a href="#">Cheat Sheets</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Ethical Guidelines</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 CyberSec Academy. All rights reserved. | For educational purposes only.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Load data from JSON file
+        async function loadWebsiteData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // Update website content
+                document.getElementById('heroTitle').innerHTML = data.websiteContent.heroTitle;
+                document.getElementById('heroDescription').textContent = data.websiteContent.heroDescription;
+                document.getElementById('coursesTitle').textContent = data.websiteContent.coursesTitle;
+                document.getElementById('coursesDescription').textContent = data.websiteContent.coursesDescription;
+                document.getElementById('aboutDescription').textContent = data.websiteContent.aboutDescription;
+                
+                // Update stats
+                document.getElementById('toolsCount').textContent = data.stats.totalTools;
+                document.getElementById('coursesCount').textContent = data.stats.totalCourses;
+                document.getElementById('studentsCount').textContent = data.stats.totalStudents.toLocaleString();
+                
+                // Load tools
+                loadTools(data.tools);
+                
+                // Load courses
+                loadCourses(data.courses);
+                
+                // Update terminal to show success
+                document.querySelector('.terminal-body').innerHTML = `
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">fetch_data --api data.json</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ Data loaded successfully</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command">status --website</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="output">✓ Website ready</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">$</span>
+                        <span class="command"></span>
+                        <span class="cursor"></span>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('heroTitle').textContent = 'Error Loading Content';
+                document.getElementById('heroDescription').textContent = 'Please check if data.json file exists.';
+            }
+        }
+
+        function loadTools(tools) {
+            const toolsGrid = document.getElementById('toolsGrid');
+            toolsGrid.innerHTML = '';
+            
+            tools.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.innerHTML = `
+                    <div class="tool-icon">
+                        <i class="${tool.icon}"></i>
+                    </div>
+                    <h3>${tool.name}</h3>
+                    <p>${tool.description}</p>
+                    <button class="btn btn-primary" onclick="downloadTool('${tool.name}')">Download Now</button>
+                `;
+                toolsGrid.appendChild(toolCard);
+            });
+        }
+
+        function loadCourses(courses) {
+            const coursesGrid = document.getElementById('coursesGrid');
+            const footerCourses = document.getElementById('footerCourses');
+            coursesGrid.innerHTML = '';
+            footerCourses.innerHTML = '';
+            
+            courses.forEach(course => {
+                // Add to courses grid
+                const courseCard = document.createElement('div');
+                courseCard.className = 'feature-card';
+                courseCard.innerHTML = `
+                    <div class="feature-icon">
+                        <i class="${course.icon}"></i>
+                    </div>
+                    <h3>${course.title}</h3>
+                    <p>${course.description}</p>
+                    <a href="#" class="feature-link">Start Learning <i class="fas fa-arrow-right"></i></a>
+                `;
+                coursesGrid.appendChild(courseCard);
+                
+                // Add to footer courses list
+                const courseItem = document.createElement('li');
+                courseItem.innerHTML = `<a href="#">${course.title}</a>`;
+                footerCourses.appendChild(courseItem);
+            });
+        }
+
+        function startLearning() {
+            alert("Starting your ethical hacking journey! Redirecting to courses...");
+        }
+
+        function exploreTools() {
+            document.getElementById('tools').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadTool(toolName) {
+            alert(`Starting download of ${toolName}... This tool is completely free!`);
+        }
+
+        // Initialize website when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWebsiteData();
+            
+            // Matrix background effect
+            const matrixBg = document.getElementById('matrixBg');
+            const chars = "01";
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.style.position = 'absolute';
+                column.style.top = '-100px';
+                column.style.left = (i * 20) + 'px';
+                column.style.width = '2px';
+                column.style.color = '#00ff41';
+                column.style.fontSize = '16px';
+                column.style.fontFamily = 'monospace';
+                column.style.textAlign = 'center';
+                column.style.textShadow = '0 0 5px #00ff41';
+                column.style.animation = `fall ${Math.random() * 5 + 3}s linear infinite`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+                
+                let content = '';
+                for (let j = 0; j < 30; j++) {
+                    content += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+                }
+                column.innerHTML = content;
+                matrixBg.appendChild(column);
+            }
+            
+            const style = document.createElement('style');
+            style.textContent = `@keyframes fall { 0% { top: -100px; opacity: 1; } 100% { top: 100vh; opacity: 0; } }`;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
