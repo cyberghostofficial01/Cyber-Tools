@@ -1,0 +1,84 @@
+{
+  "websiteContent": {
+    "heroTitle": "Master <span>Ethical Hacking</span> For Free",
+    "heroDescription": "Learn cybersecurity fundamentals, penetration testing, and ethical hacking techniques through hands-on labs and real-world scenarios. All tools and resources are completely free with no login required.",
+    "coursesTitle": "What You'll Learn",
+    "coursesDescription": "Our comprehensive curriculum covers all aspects of ethical hacking and cybersecurity - completely free",
+    "aboutTitle": "About CyberSec Academy",
+    "aboutDescription": "We are dedicated to providing free cybersecurity education to everyone. Our mission is to make ethical hacking knowledge accessible to all."
+  },
+  "tools": [
+    {
+      "id": 1,
+      "name": "Nmap Scanner",
+      "description": "Network discovery and security auditing tool",
+      "icon": "fas fa-search",
+      "downloadLink": "#"
+    },
+    {
+      "id": 2,
+      "name": "Metasploit",
+      "description": "Penetration testing framework",
+      "icon": "fas fa-wrench",
+      "downloadLink": "#"
+    },
+    {
+      "id": 3,
+      "name": "John the Ripper",
+      "description": "Password cracking utility",
+      "icon": "fas fa-key",
+      "downloadLink": "#"
+    },
+    {
+      "id": 4,
+      "name": "Burp Suite",
+      "description": "Web application security testing",
+      "icon": "fas fa-spider",
+      "downloadLink": "#"
+    }
+  ],
+  "courses": [
+    {
+      "id": 1,
+      "title": "Network Security",
+      "description": "Learn how to secure networks, detect intrusions, and prevent unauthorized access to systems and data.",
+      "icon": "fas fa-network-wired"
+    },
+    {
+      "id": 2,
+      "title": "Cryptography",
+      "description": "Master encryption algorithms, cryptographic protocols, and learn how to break weak implementations.",
+      "icon": "fas fa-lock"
+    },
+    {
+      "id": 3,
+      "title": "Vulnerability Analysis",
+      "description": "Identify, analyze and exploit software vulnerabilities using industry-standard tools and techniques.",
+      "icon": "fas fa-bug"
+    },
+    {
+      "id": 4,
+      "title": "Social Engineering",
+      "description": "Understand human psychology and learn techniques to test organizational security through social engineering.",
+      "icon": "fas fa-user-secret"
+    },
+    {
+      "id": 5,
+      "title": "Web Application Security",
+      "description": "Find and exploit vulnerabilities in web applications including SQL injection, XSS, and CSRF attacks.",
+      "icon": "fas fa-code"
+    },
+    {
+      "id": 6,
+      "title": "Digital Forensics",
+      "description": "Learn how to investigate cyber crimes, recover deleted data, and analyze digital evidence.",
+      "icon": "fas fa-shield-alt"
+    }
+  ],
+  "stats": {
+    "totalTools": 4,
+    "totalCourses": 6,
+    "totalStudents": 10500,
+    "totalDownloads": 25400
+  }
+}
